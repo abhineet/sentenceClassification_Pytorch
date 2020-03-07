@@ -1,0 +1,86 @@
+Description of function :
+
+1) def read_data(path):
+    # Input: Path to data containing training set
+    # Output: list of sentences with labels and sentence token
+    # Processing:
+    # read the data , tokenise it and lower the token
+    # split the data , into labels and sentence token
+
+2) def remove_stop_words(data, path):
+    # Input data: [[DESC:manner, list(['how', 'serfdom', 'develop', 'leave', 'russia', '?'])]]
+    # path : path to stop_word.txt
+    # Output: [[DESC:manner, list([, 'serfdom', 'develop', 'leave', 'russia', '?'])]]
+    # Processing : removes stop word
+
+3) def get_labels(data):
+    # Return a dict of label and index value
+    # Output:{'LOC:state': 0,'HUM:title': 1,'LOC:other': 2,'DESC:manner': 3}
+
+4) def store_labels(labels, path):
+    # store the labels dict as pkl to be used during testing
+
+5) def load_labels(path):
+    # function to retreive the stored label during training
+
+6) def append_labels(data, labels):
+    # function to convert labels from string to index
+    # Input :[[DESC:manner, list(['how', 'serfdom', 'develop', 'leave', 'russia', '?'])]]
+    # output: [[3, list(['how', 'serfdom', 'develop', 'leave', 'russia', '?'])]]
+
+ 7) def create_indexed_vocab(data):
+    # this function assign a key to each word in the sentence only if the count of that word is gt eq 2. i.e it
+    # removes the word with lesser frequency
+    # Input format : data is in form  [[3, list(['how', 'serfdom', 'develop',
+    # 'leave', 'russia', '?'])]]
+    # Output format : {{'child': 0,'jaco': 1, 'tics': 2, 'restore': 3, 'inspiration': 4,}
+
+ 8) def create_vocab(data):
+    # this function assign a key to each word in the sentence.
+    # Input format : data is in form  [[3, list(['how', 'serfdom', 'develop', 'leave', 'russia', '?'])]]
+    # Output format : {{'child': 0,'jaco': 1, 'tics': 2, 'restore': 3, 'inspiration': 4,}
+
+ 9) def load_glove_embeddings(path, indexed_vocab, embedding_dim=300):
+    # this functions add the embeddings to the 'glove'.
+    # It takes the glove , word dict and dimensions as input and returns
+    # the embeddings with the new words to train
+
+ 10) def split_train_test(data, test_ratio):
+    #  A function to randomly split the data in train/test set , given a split ratio.
+
+ 11) def pre_process(data, cfg):
+    # A function to call other functions to preprocess and clean the data , i.e
+    # 1) read the data and tokenise
+    # 2) remove stop words
+    # 3) lower the tokens
+
+ 12) def get_word2idx(use_random, cfg):
+    # A contrlloer function to retreive word2idx to handle cases for using random or pretrained method
+    # Internally it calls methods to create vocab
+
+ 13) def get_embeddings(use_random, word2idx, cfg):
+    # A controller function to retreive embeddings to handle cases to use random or pretrained .
+    # It internally calls other function to get embeddings , vocab and word2idx.
+    # And saves the embeddings , vocab and word2idx for testing .
+
+ 14) def save_model(model, path):
+    # given a model , and path ; save the model at path with pth extension
+
+ 15) def get_idx2word(word2idx):
+    # function to reverse key,value to value,key for a dictionary
+
+ 16) def train_bow_model(data_set, num_unique_labels, word2idx, embeddings, cfg, input_size):
+    # A function to train the bag og words model. All configuration can be controlled from config file-> bow.config
+
+ 17 ) def evaluate_bow(test, model, word2idx, embeddings, idx2word, output_path):
+    # A fucntion to evaluate the BAG of Words model . It also saves the output to ../data/output.txt.
+    # post the prediction of label, it calls the function to get the label string from label index.
+
+ 18) def evaluate_lstm(data, word2idx, model, idx2word, output_path):
+    # A fucntion to evaluate the BAG of Words model . It also saves the output to ../data/output.txt.
+    # post the prediction of label, it calls the function to get the label string from label index.
+
+ 19) def train_bilstm_model(data, embedding_dim, hidden_dim, vocab_size, tagset_size, learning_rate, word2idx, use_random,
+                       glove, cfg):
+    # A function to train the BiLSTM  model. All configuration can be controlled from config file-> bilstm.config
+

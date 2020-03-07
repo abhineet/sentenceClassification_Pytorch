@@ -1,0 +1,20 @@
+HOW TO RUN ?
+
+    1) For training :
+      a) bag of words
+      python3 question_classifier.py train  -config ../data/bow.config
+      to use random : change pretrained -> random to True in bow.config
+      to use pretrained : chnage the pretrained-> random to False in bow.config
+      b) BiLSTM
+      python3 question_classifier.py train  -config ../data/bilstm.config
+      to use random : change pretrained -> random to True in bilstm.config
+      to use pretrained : chnage the pretrained-> random to False in bilstm.config
+
+    2) For Test:
+    a) bag of words :
+     python3 question_classifier.py test  -config ../data/bow.config
+    b) BiLSTM
+      python3 question_classifier.py test  -config ../data/bilstm.config
+
+     Testing genrates the output at ../data/output.txt and also prints accuracy on the terminal.
+     It overwrites the output everytime.

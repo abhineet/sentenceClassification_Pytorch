@@ -24,8 +24,13 @@ class BOWClassifier(nn.Module):
         return output
 
 
-def make_bow_vector(sentence, indexed_vocab, embeddings):
-    pt_tensor = torch.zeros(300, dtype=torch.long)
+def make_bow_vector(sentence, indexed_vocab, embeddings,input_size):
+    # input: sentence which needs to be vectorized, the word to index mapping, word emebeddings
+    # output: vector representation for the sentence passed as input
+    # calculate the vector of each sentence
+    # sum up the vectors of words in the sentence
+    # divide the sum vector by the number of words in sentence
+    pt_tensor = torch.zeros(input_size, dtype=torch.long)
     count = 0
     for word in sentence:
         count += 1
@@ -37,17 +42,18 @@ def make_bow_vector(sentence, indexed_vocab, embeddings):
     return pt_tensor
 
 
-def get_bow_rep(data, word2idx, embeddings):
+def get_bow_rep(data, word2idx, embeddings,input_size):
+    # controller function to vectorise the sentences. it internally calls function to make bow_vectors
     bow_data = []
     for label, sent in data:
-        bow_data.append(make_bow_vector(sent, word2idx, embeddings))
+        bow_data.append(make_bow_vector(sent, word2idx, embeddings,input_size))
     return torch.stack(bow_data)
 
 
-def train_bow_model(data_set, num_unique_labels, word2idx, embeddings, cfg, input_size,use_random):
+def train_bow_model(data_set, num_unique_labels, word2idx, embeddings, cfg, input_size, use_random):
     # A function to train the bag og words model. All configuration can be controlled from config file-> bow.config
     print("Training started !!! It may take a few minutes.")
-    training_set = get_bow_rep(data_set, word2idx, embeddings)
+    training_set = get_bow_rep(data_set, word2idx, embeddings,input_size)
     if use_random:
         training_set = training_set.clone().detach().requires_grad_(False)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -81,7 +87,7 @@ def train_bow_model(data_set, num_unique_labels, word2idx, embeddings, cfg, inpu
     return model
 
 
-def evaluate_bow(test, model, word2idx, embeddings, idx2word, output_path):
+def evaluate_bow(test, model, word2idx, embeddings, idx2word, output_path,input_size):
     # A fucntion to evaluate the BAG of Words model . It also saves the output to ../data/output.txt.
     # post the prediction of label, it calls the function to get the label string from label index.
     predicted_labels = []
@@ -89,7 +95,7 @@ def evaluate_bow(test, model, word2idx, embeddings, idx2word, output_path):
     correct = 0
 
     for label, data in test:
-        bow_vec = make_bow_vector(data, word2idx, embeddings)
+        bow_vec = make_bow_vector(data, word2idx, embeddings,input_size)
         logprobs = model(bow_vec)
         logprobs = F.softmax(logprobs)
         pred = np.argmax(logprobs.data.numpy())

@@ -5,7 +5,7 @@ import torch
 
 import yaml
 from Util.BOW import *
-from Util.LSTM import *
+from Util.BiLSTM import *
 from Util.utils import *
 
 
@@ -82,7 +82,7 @@ def main(method, cfg):
             model.eval()
 
             # evaluate the model and save the data
-            acc = evaluate_bow(data_test_transformed, model, word2idx, embeddings, index2label, cfg['data']['output'])
+            acc = evaluate_bow(data_test_transformed, model, word2idx, embeddings, index2label, cfg['data']['output'],input_size)
 
             print("\nAccuracyBOW=", acc * 100)
 
@@ -92,7 +92,7 @@ def main(method, cfg):
             word2idx = torch.load(cfg['data']['word2idx'])
             _glove = torch.load(cfg['data']['vocab'])
 
-            # params for LSTMModel loader
+            # params for BiLSTMModel loader
             vocab_size = _glove.size(0)
             embedding_dim = _glove.size(1)
             tagset_size = num_unique_labels
@@ -100,7 +100,7 @@ def main(method, cfg):
             use_random = cfg['use_pretrained']['random']
 
             # load saved model and use for interpretation
-            model = LSTMTagger(embedding_dim, hidden_dim, vocab_size, tagset_size, use_random, _glove)
+            model = BiLSTM(embedding_dim, hidden_dim, vocab_size, tagset_size, use_random, _glove)
             model.load_state_dict(torch.load(cfg['data']['model']))
             model.eval()
 

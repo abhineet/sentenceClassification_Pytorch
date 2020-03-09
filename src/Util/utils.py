@@ -92,6 +92,7 @@ def create_indexed_vocab(data):
     for k, v in count.items():
         vocab.append(k)
     indexed_vocab = {word: idx for idx, word in enumerate(vocab)}
+
     return indexed_vocab
 
 
@@ -149,13 +150,13 @@ def pre_process(data, cfg):
     return cleaned_data
 
 
-def get_word2idx(use_random, cfg):
+def get_word2idx(use_random, cfg,data):
     # A contrlloer function to retreive word2idx to handle cases for using random or pretrained method
     # Internally it calls methods to create vocab
-    data = pre_process(cfg['data']['questions'], cfg)
-    labels = get_labels(data)
-    data = append_labels(data, labels)
-    print ('get_word2idx:::::use_random::::::::::::::',use_random)
+    # data = pre_process(cfg['data']['questions'], cfg)
+    # labels = get_labels(data)
+    # data = append_labels(data, labels)
+    # print ('get_word2idx:::::use_random::::::::::::::',use_random)
     if use_random:
         word2idx = create_indexed_vocab(data)
     else:
@@ -168,18 +169,17 @@ def get_embeddings(use_random, word2idx, cfg):
     # It internally calls other function to get embeddings , vocab and word2idx.
     # And saves the embeddings , vocab and word2idx for testing .
     glove_embeddings = cfg['data']['glove']
+    word2idx['#UNK#'] = len(word2idx)
+    glove = load_glove_embeddings(glove_embeddings, word2idx)
     if use_random :
-        word2idx['#UNK#'] = len(word2idx)
-        glove = load_glove_embeddings(glove_embeddings, word2idx)
         embeddings = nn.Embedding(glove.size(0), glove.size(1))
     else:
-        word2idx['#UNK#'] = len(word2idx)
-        glove = load_glove_embeddings(glove_embeddings, word2idx)
         embeddings = nn.Embedding.from_pretrained(glove, freeze=True)
 
     torch.save(embeddings, cfg['data']['embeddings'])
     torch.save(word2idx, cfg['data']['word2idx'])
     torch.save(glove, cfg['data']['vocab'])
+
     return embeddings, glove
 
 

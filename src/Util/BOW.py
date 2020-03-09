@@ -44,10 +44,12 @@ def get_bow_rep(data, word2idx, embeddings):
     return torch.stack(bow_data)
 
 
-def train_bow_model(data_set, num_unique_labels, word2idx, embeddings, cfg, input_size):
+def train_bow_model(data_set, num_unique_labels, word2idx, embeddings, cfg, input_size,use_random):
     # A function to train the bag og words model. All configuration can be controlled from config file-> bow.config
     print("Training started !!! It may take a few minutes.")
     training_set = get_bow_rep(data_set, word2idx, embeddings)
+    if use_random:
+        training_set = training_set.clone().detach().requires_grad_(False)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # input_size = 300
     hidden_size = cfg['network']['hidden_size']
@@ -55,6 +57,8 @@ def train_bow_model(data_set, num_unique_labels, word2idx, embeddings, cfg, inpu
     num_epochs = cfg['hyperparams']['epochs']
     learning_rate = cfg['hyperparams']['learning_rate']
     batch_size = cfg['hyperparams']['batch_size']
+
+    # print (hidden_size,num_classes,num_epochs,learning_rate,batch_size,input_size)
 
     model = BOWClassifier(input_size, hidden_size, num_classes).to(device)
     criterion = torch.nn.CrossEntropyLoss()

@@ -12,8 +12,9 @@ from Util.utils import *
 def main(method, cfg):
     if method == 'train':
         # get all the training data for preparaing the label set and store the labels for future use
-        complete_data = cfg['data']['questions']
-        labels = get_labels(pre_process(complete_data, cfg))
+        complete_data = pre_process(cfg['data']['questions']    , cfg)
+        labels = get_labels(complete_data)
+        complete_data = append_labels(complete_data, labels)
         store_labels(labels, cfg['data']['labels'])
         num_unique_labels = len(set(labels))
 
@@ -24,13 +25,15 @@ def main(method, cfg):
         use_random = cfg['use_pretrained']['random']
 
         # create word2idx , embeddings and vocab for training the model
-        word2idx = get_word2idx(use_random, cfg)
+        word2idx = get_word2idx(use_random, cfg,complete_data)
         embeddings, _glove = get_embeddings(use_random, word2idx, cfg)
         input_size = _glove.size(1)
 
+
+
         if (cfg['model']['name']).lower() == 'bow':
 
-            mod = train_bow_model(data_train_transformed, num_unique_labels, word2idx, embeddings, cfg, input_size)
+            mod = train_bow_model(data_train_transformed, num_unique_labels, word2idx, embeddings, cfg, input_size,use_random)
             save_model(mod, cfg['data']['model'])
 
         elif (cfg['model']['name']).lower() == 'bilstm':

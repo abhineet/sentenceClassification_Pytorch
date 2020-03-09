@@ -84,3 +84,16 @@ Description of function :
                        glove, cfg):
     # A function to train the BiLSTM  model. All configuration can be controlled from config file-> bilstm.config
 
+20) def make_bow_vector(sentence, indexed_vocab, embeddings):
+    # input: sentence which needs to be vectorized, the word to index mapping, word emebeddings
+    # output: vector representation for the sentence passed as input
+    # calculate the vector of each sentence
+    # sum up the vectors of words in the sentence
+    # divide the sum vector by the number of words in sentence
+
+21) def get_bow_rep(data, word2idx, embeddings):
+    # controller function to vectorise the sentences. it internally calls function to make bow_vectors
+
+
+
+

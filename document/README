@@ -4,11 +4,11 @@ HOW TO RUN ?
       a) bag of words
       python3 question_classifier.py train  -config ../data/bow.config
       to use random : change pretrained -> random to True in bow.config
-      to use pretrained : chnage the pretrained-> random to False in bow.config
+      to use pretrained : change the pretrained-> random to False in bow.config
       b) BiLSTM
       python3 question_classifier.py train  -config ../data/bilstm.config
       to use random : change pretrained -> random to True in bilstm.config
-      to use pretrained : chnage the pretrained-> random to False in bilstm.config
+      to use pretrained : change the pretrained-> random to False in bilstm.config
 
     2) For Test:
     a) bag of words :
@@ -18,3 +18,9 @@ HOW TO RUN ?
 
      Testing genrates the output at ../data/output.txt and also prints accuracy on the terminal.
      It overwrites the output everytime.
+
+
+
+NOTE:
+     The input dimension in the code is the same as glove embeddings vector dimensions(currently it is 300). If the glove file changes , please
+     chnage the input_size at network->input_size to <new size> in bow.config.
